@@ -371,6 +371,7 @@ export const orderDelivered = async (req: Request, res: Response): Promise<void>
         const deliveryBoyId = req.user?.id; // Get the delivery boy's ID from the request
         const { userId, productId } = req.body; // Get the userId (customer) and productId from the request body
 
+        
         // Check for valid input
         if (!deliveryBoyId || !userId || !productId) {
             res.status(400).json({ error: "deliveryBoyId, userId, and productId are required" });
