@@ -76,6 +76,11 @@ router.post(
     }
 );
 
+
+
+
+
+
 // PUT route to edit a product
 router.put(
     "/editproduct",

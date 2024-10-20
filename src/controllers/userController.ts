@@ -14,7 +14,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         const { name, email, password, phoneNumber, address } = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
+            console.log(errors)
+            res.status(400).json({ error: "Enter valid Details" });
             return;
         }
         const checking = await User.findOne({ email });
@@ -58,7 +59,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
+            console.log(errors);
+            res.status(400).json("error at login");
             return;
         }
 
@@ -182,7 +184,7 @@ export const updateCart = async (req: Request, res: Response): Promise<void> => 
 export const deleteFromCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user?.id; // Get user ID from the JWT token
-        const { productId } = req.body; // Get the productId from the request body
+        const { productId } = req.params; // Get the productId from URL parameters
 
         // Check for valid input
         if (!userId || !productId) {
@@ -211,6 +213,7 @@ export const deleteFromCart = async (req: Request, res: Response): Promise<void>
         res.status(500).send("Server Error");
     }
 };
+
 
 export const getAllCartItems = async (req: Request, res: Response): Promise<void> => {
     try {

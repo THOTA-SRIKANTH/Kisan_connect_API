@@ -115,6 +115,26 @@ router.get("/getAllProductsByName", async (req: Request, res: Response) => {
     }
 });
 
+router.get(
+    "/getProduct/:productId", 
+    async (req: Request, res: Response) => {
+        try {
+            // Use await to get the product item
+            const item = await ProductItem.findById(req.params.productId);
+            
+            // Check if the product was found
+            if (!item) {
+                return res.status(404).json({ message: "Product not found" });
+            }
+
+            // Return the found product item
+            res.status(200).json({ message: "Product retrieved successfully", item });
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
 
 router.post('/submitContactForm', submitContactForm);
 
