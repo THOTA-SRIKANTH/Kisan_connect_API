@@ -16,6 +16,8 @@ userRouter.post('/login', [
     check('email').isEmail().withMessage('Email is invalid')
 ], userController.login);
 
+userRouter.get('/getUser',fetchUser, userController.getUser);
+
 userRouter.post('/addCartItem',fetchUser,userController.addToCart)
 userRouter.put('/updateCartItem',fetchUser,userController.updateCart)
 userRouter.delete('/deleteCardItem/:productId',fetchUser,userController.deleteFromCart)

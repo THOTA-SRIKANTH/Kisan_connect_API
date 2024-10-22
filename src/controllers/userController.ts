@@ -93,6 +93,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+export const getUser=async(req:Request,res:Response)=>
+{
+    try{
+        const user=await User.findById(req.user?.id).select('-password');
+        res.status(200).json(user);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server Error");
+    }
+}
 
 export const addToCart = async (req: Request, res: Response): Promise<void> => {
     try {
