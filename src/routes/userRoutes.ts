@@ -17,6 +17,7 @@ userRouter.post('/login', [
 ], userController.login);
 
 userRouter.get('/getUser',fetchUser, userController.getUser);
+userRouter.put('/updateUser',fetchUser,userController.updateUser)
 
 userRouter.post('/addCartItem',fetchUser,userController.addToCart)
 userRouter.put('/updateCartItem',fetchUser,userController.updateCart)
