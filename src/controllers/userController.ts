@@ -132,7 +132,7 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
 
         // Check for valid input
         if (!userId || !productId || !quantity) {
-            res.status(400).json({ error: "userId, productId, and quantity are required" });
+            res.status(400).json({ error: "userId, productId and quantity are required" });
             return;
         }
 
@@ -264,6 +264,7 @@ export const getAllCartItems = async (req: Request, res: Response): Promise<void
             res.status(200).json({ message: "Your cart is empty", cartItems: [] });
             return;
         }
+        console.log(order.cartItems)
 
         // Return the cart items
         res.status(200).json({ cartItems: order.cartItems });
@@ -310,6 +311,7 @@ export const placeOrder = async (req: Request, res: Response): Promise<void> => 
 
         // Calculate the amount based on product price and quantity
         const amount = product.price * quantity;
+        const productName=product.productName;
 
         // Check if the delivery item already exists
         const existingDeliveryItem = await DeliveryItemsModel.findOne({ userId, productId });
@@ -326,6 +328,7 @@ export const placeOrder = async (req: Request, res: Response): Promise<void> => 
              deliveryItem = {
                 userId,
                 productId,
+                productName,
                 address,
                 quantity,
                 amount
@@ -351,6 +354,7 @@ export const placeOrder = async (req: Request, res: Response): Promise<void> => 
         // Add the ordered item to the on-the-way items in the order
         order.onTheWayItems.push({
             productId,
+            productName,
             quantity,
             orderedDate: new Date(),
             amount // Use the calculated amount for the ordered item
@@ -383,7 +387,7 @@ export const getAllDeliveryItems = async (req: Request, res: Response): Promise<
         }
 
         // Check if the user is a delivery boy
-        if (req.user?.isDeliveryBoy) { // Assuming `isDeliveryBoy` is a field in the User model
+        if (!req.user?.isDeliveryBoy) { // Assuming `isDeliveryBoy` is a field in the User model
             res.status(403).json({ error: "Access denied. You are not a delivery boy." });
             return;
         }
@@ -398,7 +402,52 @@ export const getAllDeliveryItems = async (req: Request, res: Response): Promise<
     }
 };
 
+export const getAllDeliveredItems = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?.id; // Get user ID from the request
+  
+      // Check if user is authenticated
+      if (!userId) {
+        res.status(401).json({ error: "User not authenticated" });
+        return;
+      }
+  
+      // Fetch ordered items for this user (delivered items assumed to be in orderedItems)
+      const deliveryItems = await OrdersModel.find(
+        { userId },
+        { orderedItems: 1, _id: 0 } // Select only `orderedItems` field and exclude `_id`
+      ).populate('orderedItems.productId', 'name price'); // Optional: Populate product details if needed
+  
+      res.status(200).json(deliveryItems);
+    } catch (error) {
+      console.error("Error fetching delivered items:", error);
+      res.status(500).send("Server Error");
+    }
+  };
 
+  
+export const getAllOnTheWay = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?.id; // Get user ID from the request
+  
+      // Check if user is authenticated
+      if (!userId) {
+        res.status(401).json({ error: "User not authenticated" });
+        return;
+      }
+  
+      // Fetch ordered items for this user (delivered items assumed to be in orderedItems)
+      const deliveryItems = await OrdersModel.find(
+        { userId },
+        { onTheWayItems: 1, _id: 0 } // Select only `orderedItems` field and exclude `_id`
+      ); // Optional: Populate product details if needed
+  
+      res.status(200).json(deliveryItems);
+    } catch (error) {
+      console.error("Error fetching delivered items:", error);
+      res.status(500).send("Server Error");
+    }
+  };
 
 export const orderDelivered = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -413,7 +462,7 @@ export const orderDelivered = async (req: Request, res: Response): Promise<void>
         }
 
         
-        if (req.user?.isDeliveryBoy) {
+        if (!req.user?.isDeliveryBoy) {
             res.status(403).json({ error: "Access denied. You are not a delivery boy." });
             return;
         }
@@ -441,6 +490,7 @@ export const orderDelivered = async (req: Request, res: Response): Promise<void>
         // Add the delivered item to orderedItems
         order.orderedItems.push({
             productId: deliveredItem.productId,
+            productName:deliveredItem.productName,
             quantity: deliveredItem.quantity,
             orderedDate: new Date(), // You can keep the original ordered date if you prefer
             amount: deliveredItem.amount

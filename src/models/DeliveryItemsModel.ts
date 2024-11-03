@@ -6,6 +6,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface DeliveryItemsDocument extends Document {
     userId: mongoose.Schema.Types.ObjectId; // Reference to User model
     productId: mongoose.Schema.Types.ObjectId; // Reference to Product model
+    productName:string;
     address: {
         doorNo?: string;
     area?: string;
@@ -28,6 +29,10 @@ const DeliveryItemsSchema: Schema<DeliveryItemsDocument> = new Schema({
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product', // Reference to Product model
+        required: true
+    },
+    productName: {
+        type: String,
         required: true
     },
     address: {

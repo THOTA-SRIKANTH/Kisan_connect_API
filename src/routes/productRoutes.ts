@@ -19,6 +19,7 @@ router.post("/", (req: Request, res: Response) => {
     res.send("Hello, working");
 });
 
+
 // Route to add a product
 router.post(
     "/addproduct", 
@@ -69,6 +70,36 @@ router.post(
             });
 
             res.status(200).json({ message: "Product item created successfully", productItem });
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
+
+
+// Route to get all products for a farmer
+router.get(
+    "/getAllFarmerProducts",
+    fetchUser,
+    async (req: ProductRequest, res: Response) => {
+        try {
+            // Ensure only Farmers can access this route
+            if (!req.user || !req.user.isFarmer) {
+                return res.status(403).send("Only Farmers can access this route");
+            }
+
+            // Extract farmer ID from query parameters (assuming it's a GET request)
+            const id  = req.user?.id;
+
+            if (!id) {
+                return res.status(400).send("Farmer ID is required");
+            }
+
+            // Retrieve products associated with the farmer's user ID
+            const productItems = await ProductItem.find({ userId: id });
+
+            res.status(200).json({ productItems });
         } catch (error: any) {
             console.error(error.message);
             res.status(500).send("Server Error");

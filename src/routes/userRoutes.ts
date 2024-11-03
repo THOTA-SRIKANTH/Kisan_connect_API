@@ -30,5 +30,7 @@ userRouter.post('/placeOrder',fetchUser,userController.placeOrder)
 userRouter.get('/getAllDeliveryItems',fetchUser,userController.getAllDeliveryItems)
 userRouter.post('/orderDelivered',fetchUser,userController.orderDelivered)
 
+userRouter.get('/getAllDeliveredItems',fetchUser,userController.getAllDeliveredItems)
+userRouter.get('/getAllOnTheWay',fetchUser,userController.getAllOnTheWay)
 
 export default userRouter;

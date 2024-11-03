@@ -9,6 +9,7 @@ interface CartItem {
 // Define the interface for OrderedItem
 interface OrderedItem {
     productId: mongoose.Types.ObjectId;
+    productName:string;
     quantity: number;
     orderedDate?: Date;
     amount: number;
@@ -38,12 +39,14 @@ const OrdersSchema = new Schema<Orders>({
     }],
     orderedItems: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+        productName:{type:String,required:true},
         quantity: { type: Number, required: true },
         orderedDate: { type: Date, default: Date.now },
         amount: { type: Number, required: true }
     }],
     onTheWayItems: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+        productName:{type:String,required:true},
         quantity: { type: Number, required: true },
         orderedDate: { type: Date, default: Date.now },
         amount: { type: Number, required: true }
