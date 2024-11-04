@@ -5,11 +5,11 @@ import adminRouter from "./routes/adminRoutes";
 import customerRouter from "./routes/customerRoutes"
 import farmerRouter from './routes/farmerRoutes';
 import cors from "cors";
+import { PORT } from './config/serverConfig';
 
 const app = express();
 
-// const { PORT } = require("./config/serverConfig");
-const PORT=3000
+
 
 // Enable CORS for all routes
 app.use(cors());

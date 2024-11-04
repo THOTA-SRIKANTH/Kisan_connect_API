@@ -1,9 +1,9 @@
 import path from "path";
-const dotenv = require("dotenv").config({
+import dotenv from "dotenv";
+
+dotenv.config({
   path: path.join(__dirname, "../", "../", ".env"),
 });
 
-module.exports = {
-  PORT: process.env.PORT,
-  MONGODB_URI: process.env.MONGODB_URI,
-};
+export const PORT = process.env.PORT;
+export const MONGODB_URI = process.env.MONGODB_URI;
