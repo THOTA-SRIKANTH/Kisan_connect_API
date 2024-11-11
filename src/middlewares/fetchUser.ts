@@ -24,21 +24,26 @@ declare global {
 const fetchUser = (req: Request, res: Response, next: NextFunction): any => {
   // Get the token from the header
   const token = req.header("auth-token");
+  // console.log(token)
 
   // If no token is provided, return an error
   if (!token) {
     return res.status(401).json({ error: "Access denied. No token provided." });
   }
 
+
   try {
     // Verify the token and cast the result to UserPayload
     const data = jwt.verify(token, 'Revanth') as UserPayload;
-    
     // Attach user data to the request object
     req.user = data; // TypeScript now recognizes 'user' on req
+
+
     next();
   } catch (err) {
     // If the token is invalid or expired
+
+    
     res.status(401).json({ error: "Invalid or expired token." });
   }
 };

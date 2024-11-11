@@ -47,12 +47,12 @@ const userSchema = new Schema<IUser>({
         required: true,
     },
     address: {
-        doorNo: { type: String },
-        area: { type: String },
-        landmark: { type: String },
-        district: { type: String },
-        state: { type: String },
-        pincode: { type: String },
+        doorNo: { type: String,default:"Not Provided" },
+        area: { type: String,default:"Not Provided" },
+        landmark: { type: String ,default:"Not Provided"},
+        district: { type: String ,default:"Not Provided"},
+        state: { type: String ,default:"Not Provided"},
+        pincode: { type: String ,default:"Not Provided"},
     },
     roles: {
         isAdmin: { type: Boolean, default: false },
